@@ -3,14 +3,15 @@ import pandas as pd
 import xml.etree.ElementTree as ET 
 from datetime import datetime
 
-
+targetfile = "test.csv"
+#transformed_data = "tlk"
 
 def extract_from_csv(file_to_process):
     dataframe = pd.read_csv(file_to_process)
     return dataframe
 
 def extract_from_json(file_to_process):
-    dataframe = pd.read_json(file_to_process)
+    dataframe = pd.read_json(file_to_process, lines=True)
     return dataframe
 
 
@@ -56,6 +57,7 @@ def transform(data):
 
 def load(targetfile,data_to_load):
     data_to_load.to_csv(targetfile)
+    
 
 def log(message):
     timestamp_format = '%H:%M:%S-%h-%d-%Y'
@@ -72,7 +74,7 @@ log("Extract phase Ended")
 
 log("Transform phase Ended")
 log("Load phase Started")
-load(targetfile,transformed_data)
+load(targetfile,transform(extracted_data))
 log("Load phase Ended")
 
 log("ETL Job Ended")

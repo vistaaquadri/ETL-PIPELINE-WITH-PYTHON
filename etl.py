@@ -3,18 +3,21 @@ import pandas as pd
 import xml.etree.ElementTree as ET 
 from datetime import datetime
 
+#define target file name to load data into
 targetfile = "test.csv"
-#transformed_data = "tlk"
 
+
+#define function to extract data from all csv files in the data folder
 def extract_from_csv(file_to_process):
     dataframe = pd.read_csv(file_to_process)
     return dataframe
 
+#define function to extract data from all json files in the data folder
 def extract_from_json(file_to_process):
     dataframe = pd.read_json(file_to_process, lines=True)
     return dataframe
 
-
+#define function to extract data from all xml files in the data folder
 def extract_from_xml(file_to_process):
 
     dataframe = pd.DataFrame(columns=['car_model','year_of_manufacture','price', 'fuel'])
@@ -37,7 +40,7 @@ def extract_from_xml(file_to_process):
 
         return dataframe
 
-
+##define function to extract all expeceted data
 def extract():
        extracted_data = pd.DataFrame(columns=['car_model','year_of_manufacture','price', 'fuel']) 
        #for csv files
@@ -51,14 +54,16 @@ def extract():
           extracted_data = extracted_data.append(extract_from_xml(xmlfile), ignore_index=True)
        return extracted_data
 
+#define function to transform the data
 def transform(data):
        data['price'] = round(data.price, 2)
        return data
 
+#define function to load into targetfile
 def load(targetfile,data_to_load):
     data_to_load.to_csv(targetfile)
     
-
+# log function to get the time all processes started
 def log(message):
     timestamp_format = '%H:%M:%S-%h-%d-%Y'
     #Hour-Minute-Second-MonthName-Day-Year
@@ -66,6 +71,7 @@ def log(message):
     timestamp = now.strftime(timestamp_format)
     with open("dealership_logfile.txt","a") as f: f.write(timestamp + ',' + message + 'n')
 
+#log all processes
 log("ETL Job Started")
 
 log("Extract phase Started")
